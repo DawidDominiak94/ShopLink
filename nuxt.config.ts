@@ -7,8 +7,6 @@ export default defineNuxtConfig({
   modules: ['@vite-pwa/nuxt'],
   ssr: false,
   pwa: {
-    workbox: { globPatterns: ['**/*.{js,css,html,png,svg,ico}'] },
-    injectManifest: { globPatterns: ['**/*.{js,css,html,png,svg,ico}'] },
     devOptions: {
       enabled: true,
       type: 'module'

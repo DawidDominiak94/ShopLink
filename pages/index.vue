@@ -1,4 +1,15 @@
 <template>
+  <ClientOnly>
+        <Button
+          v-if="$pwa?.showInstallPrompt && !$pwa?.offlineReady"
+          class="mt-4"
+          size="sm"
+          @click="installPwa"
+        >
+      Install Application
+      </Button>
+  </ClientOnly>
+
   <div class="p-4">
     <h1 class="text-2xl font-bold">ShopLink</h1>    
     <div class="grid grid-cols-2 gap-4 mt-4">
@@ -59,5 +70,17 @@
     };
   }
 
+  const nuxtApp = useNuxtApp();
+  const installPwa = () => {
+    const pwa = nuxtApp.$pwa
+    if (pwa?.showInstallPrompt) {
+      pwa.install()
+    } else {
+      throw createError({
+        statusCode: 400,
+        message: 'Something went wrong installing the application, please try again later or contact support.',
+      })
+    }
+  }
 
 </script>
