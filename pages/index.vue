@@ -26,6 +26,10 @@
       {
         rel: 'apple-touch-icon',
         href: '/icons/512x512.png'
+      },
+      {
+        rel: 'manifest',
+        href: '/manifest.webmanifest'
       }
     ],
     meta: [
