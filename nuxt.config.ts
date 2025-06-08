@@ -7,9 +7,15 @@ export default defineNuxtConfig({
   modules: ['@vite-pwa/nuxt'],
   ssr: false,
   pwa: {
-    workbox:{
+    workbox: {
       cleanupOutdatedCaches: true,
-      navigateFallbackDenylist: [/^\/sw\.js$/] // ✅ dodaj, jeśli zostawiasz fallback
+      globPatterns: ['**/*.{js,css,html,ico,png,svg,json,webmanifest}'],
+      navigateFallback: '/',
+      navigateFallbackDenylist: [/^\/sw\.js$/]
+    },
+    devOptions: {
+      enabled: true,
+      type: 'module'
     },
     registerType: 'autoUpdate',
     manifest: {
