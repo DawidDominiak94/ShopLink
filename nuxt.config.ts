@@ -5,7 +5,6 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   modules: ['@vite-pwa/nuxt'],
-  ssr: false,
   pwa: {
     workbox: { globPatterns: ['**/*.{js,css,html,png,svg,ico}'] },
     injectManifest: { globPatterns: ['**/*.{js,css,html,png,svg,ico}'] },
