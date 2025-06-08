@@ -9,7 +9,6 @@ export default defineNuxtConfig({
   pwa: {
     workbox:{
       cleanupOutdatedCaches: true,
-      navigateFallback: '/', // ❌ TO powoduje błąd
       navigateFallbackDenylist: [/^\/sw\.js$/] // ✅ dodaj, jeśli zostawiasz fallback
     },
     registerType: 'autoUpdate',
