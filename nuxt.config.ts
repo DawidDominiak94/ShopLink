@@ -7,6 +7,11 @@ export default defineNuxtConfig({
   modules: ['@vite-pwa/nuxt'],
   ssr: false,
   pwa: {
+    workbox:{
+      cleanupOutdatedCaches: true,
+      navigateFallback: '/', // ❌ TO powoduje błąd
+      navigateFallbackDenylist: [/^\/sw\.js$/] // ✅ dodaj, jeśli zostawiasz fallback
+    },
     registerType: 'autoUpdate',
     manifest: {
       name: 'ShopLink',
