@@ -1,13 +1,14 @@
 <template>
   <ClientOnly>
-        <Button
-          v-if="$pwa?.showInstallPrompt && !$pwa?.offlineReady"
-          class="mt-4"
-          size="sm"
-          @click="installPwa"
-        >
-      Install Application
-      </Button>
+    <div v-if="shouldShowHint" class="top-0 inset-x-0 p-4 bg-yellow-100 text-black z-50 text-sm shadow">
+      <p>
+        Aby zainstalować aplikację na iPhonie / iPad, naciśnij
+        <span class="font-semibold">Udostępnij</span>
+        <span class="inline-block mx-1">📤</span>
+        a następnie
+        <span class="font-semibold">„Dodaj do ekranu głównego"</span>.
+      </p>
+    </div>
   </ClientOnly>
 
   <div class="p-4">
@@ -31,6 +32,8 @@
 <script setup lang="ts">
   const { fetchShoppingList } = useShoppingListRepo();
   const items = ref<ShoppingList[]>([]);
+  const shouldShowHint = ref(false);
+  const name = ref<string>();
 
   useHead({
     link: [
@@ -52,6 +55,11 @@
 
   onMounted(async () => {
     await fetchShoppingLists();
+    name.value = window.navigator.userAgent.toLowerCase();
+    const isIos = /iphone|ipad|ipod|mac os x/.test(window.navigator.userAgent.toLowerCase());
+    const isInStandaloneMode = 'standalone' in window.navigator && window.navigator.standalone;
+
+    shouldShowHint.value = isIos && !isInStandaloneMode;
   })
 
   async function fetchShoppingLists()
