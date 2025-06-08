@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     },
     client:{ installPrompt: true },
     registerType: 'autoUpdate',
+    injectRegister: 'auto',
     manifest: {
       name: 'ShopLink',
       short_name: 'ShopLink',
