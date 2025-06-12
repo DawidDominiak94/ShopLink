@@ -53,10 +53,8 @@ export const useUseShoppingListSupabase = () =>
       for(const item of supabaseItems)
       {
         console.log("Checking local item:", item.id);
-        const localItem = await useShoppingListRepo().fetchShoppingListById(item.id);
-        console.log("Checking local localItem:", localItem);
 
-        if( !localItem )
+        if( await useShoppingListRepo().checkIfShoppingListExists(item.id) )
         {
           // If the item doesn't exist in local storage, add it
           await useShoppingListRepo().addShoppingListFromSupabase(item.name, item.id, item.createdAt, item.status);
