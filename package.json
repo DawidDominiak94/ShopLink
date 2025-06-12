@@ -11,6 +11,7 @@
     "dev:host": "nuxt dev --host"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.50.0",
     "@tailwindcss/vite": "^4.1.8",
     "@vite-pwa/nuxt": "^1.0.3",
     "daisyui": "^5.0.43",

@@ -19,6 +19,20 @@ export const useShoppingListRepo = () => {
     return shoppingList;
   }
 
+  const addShoppingListFromSupabase = async (name: string, id: string, createdAt: string, status: EShoppingListStatus) => {
+    const shoppingList = {
+      id,
+      name,
+      createdAt: Date.parse(createdAt),
+      updatedAt: Date.now(),
+      items: [] as ShoppingItem[],
+      status: status,
+    }
+    await db.shopping_list.add(shoppingList, shoppingList.id);
+
+    return await db.shopping_list.get(id);
+  }
+
   const addShoppingList = async (name: string) => {
     const shoppingList = {
       id: uuidv4(),
@@ -40,6 +54,11 @@ export const useShoppingListRepo = () => {
     }
     console.log(`🧪 Lista zakupów o ID ${id}:`, shoppingList );
     return shoppingList;
+  }
+
+  const checkIfShoppingListExists = async (id: string): Promise<boolean> => {
+    const shoppingList = await db.shopping_list.get(id);
+    return shoppingList !== undefined;
   }
 
   const addShoppingItem = async (listId: string, item: ShoppingItem) => {
@@ -74,5 +93,5 @@ export const useShoppingListRepo = () => {
     console.log(`🧪 Zaktualizowano przedmiot o ID ${itemId} na liście zakupów o ID ${listId}:`, updatedItem)    ;
   }
 
-  return { addShoppingList, fetchShoppingList, fetchShoppingListById, addShoppingItem, updateShoppingItem, deleteShoppingList }
+  return { checkIfShoppingListExists, addShoppingList, fetchShoppingList, fetchShoppingListById, addShoppingItem, updateShoppingItem, deleteShoppingList, addShoppingListFromSupabase }
 }

@@ -9,7 +9,7 @@ export default defineNuxtConfig({
     '/': { prerender: true }
   },
   pwa: {
-    workbox: { globPatterns: ['**/*.{js,css,html,png,svg,ico}'] },
+    workbox: { globPatterns: ['**/*.{js,css,html,png,svg,ico}'], disableDevLogs: true },
     injectManifest: { globPatterns: ['**/*.{js,css,html,png,svg,ico}'] },
     devOptions: {
       enabled: true,

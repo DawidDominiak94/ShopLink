@@ -60,6 +60,10 @@
     const isInStandaloneMode = 'standalone' in window.navigator && window.navigator.standalone;
 
     shouldShowHint.value = isIos && !isInStandaloneMode;
+
+    await useUseShoppingListSupabase().synchronizeShoppingList();  
+
+
   })
 
   async function fetchShoppingLists()
