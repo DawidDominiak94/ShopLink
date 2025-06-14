@@ -21,7 +21,7 @@
           </svg>
         </div>
       </NuxtLink>
-      <NuxtLink :to="{ name: 'shopping-list-id', params: { id: item.uuid } }" v-for="item in items" :key="item.id" class="rounded-4xl border-2 h-30 text-center content-center border-dashed" :class="[  getListBorderByStatus(item) ]">
+      <NuxtLink :to="{ name: 'shopping-list-id', params: { id: item.id } }" v-for="item in items.lists" :key="item.id" class="rounded-4xl border-2 h-30 text-center content-center border-dashed" :class="[  getListBorderByStatus(item) ]">
           {{ item.name }} 
       </NuxtLink>
     </div>
@@ -30,8 +30,10 @@
 </template>
 
 <script setup lang="ts">
+  const nuxtApp = useNuxtApp();
+  const userStore = useUserStore();
 
-  const items = ref<ShoppingList[]>();
+  const items = reactive<{lists : ShoppingList[]}>({ lists: [] });
 
   const shouldShowHint = ref(false);
   const name = ref<string>();
@@ -55,21 +57,19 @@
   })
 
   onMounted(async () => {
+    await userStore.refreshUser();
     name.value = window.navigator.userAgent.toLowerCase();
     const isIos = /iphone|ipad|ipod|mac os x/.test(window.navigator.userAgent.toLowerCase());
     const isInStandaloneMode = 'standalone' in window.navigator && window.navigator.standalone;
 
     shouldShowHint.value = isIos && !isInStandaloneMode;
 
-    await useUseShoppingListSupabase().synchronizeShoppingList();
-    items.value = await useShoppingListRepo().fetchShoppingList();
+    items.lists = await useSupabaseRepo().getShoppingLists();
   });
 
 
   function getListBorderByStatus( list : ShoppingList ) : string
   {
-    if( list.isSynced === false )
-      return 'border-secondary';
 
     switch( list.status )
     {
@@ -79,19 +79,4 @@
       default: return 'border-red-600';
     };
   }
-
-  const nuxtApp = useNuxtApp();
-
-  const installPwa = () => {
-    const pwa = nuxtApp.$pwa
-    if (pwa?.showInstallPrompt) {
-      pwa.install()
-    } else {
-      throw createError({
-        statusCode: 400,
-        message: 'Something went wrong installing the application, please try again later or contact support.',
-      })
-    }
-  }
-
 </script>

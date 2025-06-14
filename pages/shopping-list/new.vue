@@ -21,27 +21,8 @@
       toast.error('Nazwa listy musi zostać podana!');
     else
     {
-      const userId : string | null = useUserStore().getLoggedInUser.userId;
-      const tempList : ShoppingList | undefined = await useShoppingListRepo().addShoppingList(shoppingListName.value);
-
-      if (!tempList || !userId) 
-      {
-        toast.error('Nie udało się dodać listy zakupów.');
-        throw new Error('Nie udało się dodać listy zakupów.');
-      }
-      
-      const supabaseList : ShoppingList = await useUseShoppingListSupabase().addListToSupabase(tempList, userId);
-      await useShoppingListRepo().updateAsSynced(supabaseList);
-
-      if( supabaseList )
-      {
-        await navigateTo({ name:'shopping-list-id', params: { id: supabaseList.uuid } })
-      }
-      else
-      {
-        toast.error('Nie udało się dodać listy zakupów.');
-        throw new Error('Nie udało się dodać listy zakupów.');
-      }
+      const nowaLista = await useSupabaseRepo().addShoppingList(shoppingListName.value);
+      await navigateTo({ name:'shopping-list-id', params: { id: nowaLista.id } })
     }
   }
 </script>
