@@ -14,13 +14,15 @@
 </template>
 
 <script lang="ts" setup>
+import { useUserStore } from '~/stores/UserStore';
+
+
   const dane = reactive<{ email: string, password: string }>({ email:"", password: "" });
+  const store = useUserStore();
 
   async function onLogin()
   {
-    const { data, error } = await useUseAuth().login(dane.email, dane.password);
-    console.log("data:",data);
-    console.log("error:",error);
+    store.logIn( dane.email, dane.password );
   }
   
 

@@ -3,15 +3,15 @@
     <h1 class="p-4">Obecnie zalogowany:</h1>
     <div v-if="activeUser" class="self-center">
       <div>
-        Użytkownik: {{ activeUser.data.user.email }}
+        Użytkownik: {{ activeUser.userEmail }}
       </div>
       
       <div>
-        Ostatnio zalogowany: {{ activeUser.data.user.last_sign_in_at }}
+        Ostatnio zalogowany: {{ activeUser.lastLoggedIn }}
       </div>
       
       <div>
-        Zarejestrowany dnia: {{ activeUser.data.user.created_at }}
+        Zarejestrowany dnia: {{ activeUser.createdAt }}
       </div>
       
     </div>
@@ -20,10 +20,12 @@
 </template>
 
 <script lang="ts" setup>
-  const activeUser = ref();
+  const activeUser = ref<UserStoreState>();
+  const store = useUserStore();
 
   onMounted(async () => {
-      activeUser.value = await useUseAuth().getCurrentUser();
+      await store.refreshUser();
+      activeUser.value = store.getLoggedInUser;
   });
 
 </script>

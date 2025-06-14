@@ -1,3 +1,5 @@
+import type { UserResponse } from "@supabase/supabase-js";
+
 export const useUseAuth = () => 
 {
   const supabase = useNuxtApp().$supabase;
@@ -21,7 +23,7 @@ export const useUseAuth = () =>
   function resetPassword(email: string) {
     // Password reset logic here
   }
-  async function getCurrentUser() {
+  async function getCurrentUser() : Promise<UserResponse> {
     // Get current user logic here
     return await supabase.auth.getUser();
   }

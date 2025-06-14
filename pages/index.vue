@@ -12,7 +12,7 @@
   </ClientOnly>
 
   <div class="p-4">
-    <h1 class="text-2xl font-bold">ShopLink</h1>    
+    <h1 class="text-2xl font-bold">ShopLink</h1>
     <div class="grid grid-cols-2 gap-4 mt-4">
       <NuxtLink :to="{ name: 'shopping-list-new' }" class="rounded-4xl border-2 h-30 text-center content-center border-dashed border-secondary">
         <div class="justify-center flex text-secondary">
@@ -30,6 +30,7 @@
 </template>
 
 <script setup lang="ts">
+
   const { fetchShoppingList } = useShoppingListRepo();
   const items = ref<ShoppingList[]>([]);
   const shouldShowHint = ref(false);
@@ -62,9 +63,7 @@
     shouldShowHint.value = isIos && !isInStandaloneMode;
 
     await useUseShoppingListSupabase().synchronizeShoppingList();  
-
-
-  })
+  });
 
   async function fetchShoppingLists()
   {
@@ -73,6 +72,9 @@
 
   function getListBorderByStatus( list : ShoppingList ) : string
   {
+    if( list.isSynced === false )
+      return 'border-secondary';
+
     switch( list.status )
     {
       case EShoppingListStatus.ACTIVE: return 'border-primary';
@@ -83,6 +85,7 @@
   }
 
   const nuxtApp = useNuxtApp();
+
   const installPwa = () => {
     const pwa = nuxtApp.$pwa
     if (pwa?.showInstallPrompt) {

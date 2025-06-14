@@ -4,7 +4,10 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
-  modules: ['@vite-pwa/nuxt'],
+  modules: ['@vite-pwa/nuxt', 'vue-sonner/nuxt', "@pinia/nuxt"],
+  pinia: {
+    storesDirs: ['./stores/**'],
+  },
   routeRules:{
     '/': { prerender: true }
   },
@@ -106,6 +109,7 @@ export default defineNuxtConfig({
     public: {
       supabaseUrl: process.env.SUPABASE_URL,
       supabaseAnonKey: process.env.SUPABASE_KEY,
+      prod: process.env.NODE_ENV === 'production',
     },
   },
   

@@ -7,6 +7,7 @@ export interface ShoppingList{
     updatedAt: number   // timestamp
     items: ShoppingItem[] // lista przedmiotów
     status: EShoppingListStatus
+    isSynced: boolean    // czy lista jest zsynchronizowana z Supabase
 }
 // Typ pojedynczego wpisu
 export interface ShoppingItem {
