@@ -7,6 +7,7 @@ export interface UserStoreState {
   userEmail: string | null;
   lastLoggedIn: Date | null;
   createdAt: Date | null;
+  image: string | null;
 }
 
 export const useUserStore = defineStore('UserStore',{
@@ -15,7 +16,8 @@ export const useUserStore = defineStore('UserStore',{
       userId: null,
       userEmail: null,
       lastLoggedIn: null,
-      createdAt: null
+      createdAt: null,
+      image: null
   } as UserStoreState },
   getters:{ 
     getLoggedInUser: (state): UserStoreState => {
@@ -23,7 +25,8 @@ export const useUserStore = defineStore('UserStore',{
         userId: state.userId,
         userEmail: state.userEmail,
         lastLoggedIn: state.lastLoggedIn,
-        createdAt: state.createdAt
+        createdAt: state.createdAt,
+        image: state.image
       };
     }
   },
@@ -46,16 +49,32 @@ export const useUserStore = defineStore('UserStore',{
         setTimeout(() => { navigateTo({ name:'index' }) },2000);
       }
     },
-    logOut()
+    async logOut()
     {
       this.userId = null;
       this.userEmail = null;
       this.lastLoggedIn = null;
       this.createdAt = null;
-    },
-    register(email:string, password:string )
-    {
 
+      await useUseAuth().logout();
+    },
+    async register(email:string, password:string )
+    {
+      const { data, error } : AuthResponse = await useUseAuth().register(email, password);
+
+      if( error )
+        toast.error(error.message);
+
+      if( data.user )
+      {
+        this.userId = data.user.id;
+        this.userEmail = data.user.email ?? null;
+        this.lastLoggedIn = data.user.last_sign_in_at !== undefined ? new Date(data.user.last_sign_in_at) : null;
+        this.createdAt = data.user.created_at !== undefined ? new Date(data.user.created_at) : null;
+
+        toast.success('Zarejestrowano pomyślnie.');
+        setTimeout(() => { navigateTo({ name:'index' }) },2000);
+      }
     },
     async refreshUser()
     {

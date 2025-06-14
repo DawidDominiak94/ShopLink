@@ -12,15 +12,37 @@
 </template>
 
 <script lang="ts" setup>
-  const { addShoppingList } = useShoppingListRepo();
+  import { toast } from 'vue-sonner';
   const shoppingListName = ref<string>();
 
   async function addToShoppingList()
   {
-    const tempList : ShoppingList | undefined = await addShoppingList(shoppingListName.value!);
+    if( !shoppingListName.value )
+      toast.error('Nazwa listy musi zostać podana!');
+    else
+    {
+      const userId : string | null = useUserStore().getLoggedInUser.userId;
+      const tempList : ShoppingList | undefined = await useShoppingListRepo().addShoppingList(shoppingListName.value);
 
-    if( tempList )
-      await navigateTo({ name:'shopping-list-id', params: { id: tempList.id } })
+      if (!tempList || !userId) 
+      {
+        toast.error('Nie udało się dodać listy zakupów.');
+        throw new Error('Nie udało się dodać listy zakupów.');
+      }
+      
+      const supabaseList : ShoppingList = await useUseShoppingListSupabase().addListToSupabase(tempList, userId);
+      await useShoppingListRepo().updateAsSynced(supabaseList);
+
+      if( supabaseList )
+      {
+        await navigateTo({ name:'shopping-list-id', params: { id: supabaseList.uuid } })
+      }
+      else
+      {
+        toast.error('Nie udało się dodać listy zakupów.');
+        throw new Error('Nie udało się dodać listy zakupów.');
+      }
+    }
   }
 </script>
 

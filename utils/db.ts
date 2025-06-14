@@ -1,7 +1,8 @@
 import Dexie, { type Table } from 'dexie'
 
 export interface ShoppingList{
-    id: string          // np. UUID
+    id: number           // np. UUID
+    uuid: string          // np. UUID
     name: string        // "Zakupy na weekend"
     createdAt: number   // timestamp
     updatedAt: number   // timestamp
@@ -11,7 +12,8 @@ export interface ShoppingList{
 }
 // Typ pojedynczego wpisu
 export interface ShoppingItem {
-  id: string                  // np. UUID
+  id: number                  // unikalny identyfikator
+  uuid: string                  // np. UUID
   text: string                // "mleko", "makaron"
   createdAt: number           // timestamp
   bought: boolean             // czy kupione
@@ -48,8 +50,8 @@ class ShopLinkDexie extends Dexie {
   constructor() {
     super('shoplink_db')
     this.version(1).stores({
-      shopping_list: '&id, name, createdAt, updatedAt, items, status',
-      shopping_items: '&id, text, createdAt, bought, synced, quantity, unit'
+      shopping_list: '&uuid, id, name, createdAt, updatedAt, items, status',
+      shopping_items: '&uuid, id, text, createdAt, bought, synced, quantity, unit'
     })
   }
 }

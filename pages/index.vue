@@ -21,7 +21,7 @@
           </svg>
         </div>
       </NuxtLink>
-      <NuxtLink :to="{ name: 'shopping-list-id', params: { id: item.id } }" v-for="item in items" :key="item.id" class="rounded-4xl border-2 h-30 text-center content-center border-dashed" :class="[  getListBorderByStatus(item) ]">
+      <NuxtLink :to="{ name: 'shopping-list-id', params: { id: item.uuid } }" v-for="item in items" :key="item.id" class="rounded-4xl border-2 h-30 text-center content-center border-dashed" :class="[  getListBorderByStatus(item) ]">
           {{ item.name }} 
       </NuxtLink>
     </div>
@@ -31,8 +31,8 @@
 
 <script setup lang="ts">
 
-  const { fetchShoppingList } = useShoppingListRepo();
-  const items = ref<ShoppingList[]>([]);
+  const items = ref<ShoppingList[]>();
+
   const shouldShowHint = ref(false);
   const name = ref<string>();
 
@@ -55,20 +55,16 @@
   })
 
   onMounted(async () => {
-    await fetchShoppingLists();
     name.value = window.navigator.userAgent.toLowerCase();
     const isIos = /iphone|ipad|ipod|mac os x/.test(window.navigator.userAgent.toLowerCase());
     const isInStandaloneMode = 'standalone' in window.navigator && window.navigator.standalone;
 
     shouldShowHint.value = isIos && !isInStandaloneMode;
 
-    await useUseShoppingListSupabase().synchronizeShoppingList();  
+    await useUseShoppingListSupabase().synchronizeShoppingList();
+    items.value = await useShoppingListRepo().fetchShoppingList();
   });
 
-  async function fetchShoppingLists()
-  {
-    items.value = await fetchShoppingList();
-  }
 
   function getListBorderByStatus( list : ShoppingList ) : string
   {

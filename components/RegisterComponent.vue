@@ -15,12 +15,11 @@
 
 <script lang="ts" setup>
   const dane = reactive<{ email: string, password: string }>({ email:"", password: "" });
+  const store = useUserStore();
 
   async function onRegister()
   {
-    const { data, error } = await useUseAuth().register(dane.email, dane.password);
-    console.log("data:",data);
-    console.log("error:",error);
+    store.register( dane.email, dane.password );
   }
   
 

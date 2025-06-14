@@ -17,8 +17,8 @@ export const useUseAuth = () =>
       password,
     });
   }
-  function logout() {
-    // Logout logic here
+  async function logout() {
+    return await supabase.auth.signOut();
   }
   function resetPassword(email: string) {
     // Password reset logic here
@@ -64,5 +64,5 @@ export const useUseAuth = () =>
     return false; // Placeholder return value   
   }
 
-  return { register, login, getCurrentUser }
+  return { register, login, getCurrentUser, logout }
 }
