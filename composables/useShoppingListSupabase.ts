@@ -1,7 +1,9 @@
 
 export const useUseShoppingListSupabase = () => 
 {
+  const supabase = useNuxtApp().$supabase;
 
+  
   async function synchronizeShoppingList() 
   {
     console.log("synchronizeShoppingList start:");

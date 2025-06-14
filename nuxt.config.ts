@@ -9,8 +9,7 @@ export default defineNuxtConfig({
     '/': { prerender: true }
   },
   pwa: {
-    workbox: { globPatterns: ['**/*.{js,css,html,png,svg,ico}'], disableDevLogs: true },
-    injectManifest: { globPatterns: ['**/*.{js,css,html,png,svg,ico}'] },
+    workbox: { disableDevLogs: true },
     devOptions: {
       enabled: true,
       type: 'module'
@@ -103,5 +102,11 @@ export default defineNuxtConfig({
     ],
   },
   css: ['~/assets/css/main.css'],
+  runtimeConfig: {
+    public: {
+      supabaseUrl: process.env.SUPABASE_URL,
+      supabaseAnonKey: process.env.SUPABASE_KEY,
+    },
+  },
   
 })

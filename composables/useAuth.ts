@@ -1,5 +1,7 @@
 export const useUseAuth = () => 
 {
+  const supabase = useNuxtApp().$supabase;
+
   async function register(email: string, password: string) 
   {
     return await supabase.auth.signUp({
