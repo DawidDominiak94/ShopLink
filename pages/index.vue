@@ -40,7 +40,7 @@
     link: [
       {
         rel: 'apple-touch-icon',
-        href: '/icons/512x512.png'
+        href: '/ios/512.png'
       },
       {
         rel: 'manifest',
