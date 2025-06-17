@@ -38,3 +38,9 @@ export enum EShoppingItemUnit
   BAG = 'torba',
   OTHER = 'inne' // domyślna jednostka
 }
+
+export interface SyncedUsers
+{
+  id: string;
+  description: string; // np. "Jan Kowalski"
+}

@@ -193,6 +193,54 @@ export const useSupabaseRepo = () => {
     return data;
   }
 
+  async function getSyncedUsers()
+  {
+    checkIfUserIsLoggedIn();
+
+    const { data, error } = await supabase
+      .from('synced_users')
+      .select()
+      .eq('owner_id', userId);
+
+    if (error)
+    {
+      logger.error("Error fetching synced users from Supabase:", error);
+      toast.error('Błąd podczas pobierania zsynchronizowanych użytkowników z Supabase. Spróbuj ponownie później.');
+      throw new Error('Błąd podczas pobierania zsynchronizowanych użytkowników z Supabase.');
+    }
+
+    const syncedUsers : SyncedUsers[] = data.map(user => ({
+      id: user.id,
+      description: user.description ?? 'Brak opisu'
+    }));
+
+    logger.info(`Pobrano ${syncedUsers.length} zsynchronizowanych użytkowników.`);
+
+    return syncedUsers || [];
+  }
+
+  async function createConnection( description: string ): Promise<SyncedUsers>
+  {
+    checkIfUserIsLoggedIn();
+
+    const { data, error } = await supabase
+      .from('synced_users')
+      .insert({
+        owner_id: userId,
+        description
+      })
+      .select()
+      .single();
+
+    if (error)
+    {
+      logger.error("Error creating connection in Supabase:", error);
+      toast.error('Błąd podczas tworzenia połączenia z użytkownikiem. Spróbuj ponownie później.');
+      throw new Error('Błąd podczas tworzenia połączenia z użytkownikiem.');
+    }
+
+    return data;
+  }
 
   return {
     getShoppingLists,
@@ -202,6 +250,8 @@ export const useSupabaseRepo = () => {
     getShoppingListByUuid,
     getShoppingListItems,
     addShoppingListItem,
-    updateShoppingListItem
+    updateShoppingListItem,
+    getSyncedUsers,
+    createConnection
   }
 }

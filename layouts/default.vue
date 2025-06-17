@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-dvh">
-    <div class="h-[calc(100dvh-5rem)]">
+    <div class="max-h-[calc(100dvh-10rem)] min-h-[calc(100dvh-5rem)] overflow-y-auto">
       <slot />
     </div>
    
