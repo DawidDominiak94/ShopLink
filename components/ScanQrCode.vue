@@ -24,8 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { useDevicesList, useUserMedia } from '@vueuse/core'
-  import { reactive, shallowRef, useTemplateRef, watchEffect } from 'vue'
+  import { useDevicesList, useUserMedia } from '@vueuse/core';
 
   const currentCamera = shallowRef<string>()
   const { videoInputs: cameras } = useDevicesList({
