@@ -12,7 +12,7 @@
     <div>
       <h2>Elementy na liście:</h2>
       <div class="mb-4">
-        <div v-for="(element,_index) of lista?.items" :key="element.id" class="border-b border-primary pt-4 pb-4" :class="[_index===0 ? 'border-t' : '']" @click="markItemAsDone(element)">
+        <div v-for="(element,_index) of items" :key="element.id" class="border-b border-primary pt-4 pb-4" :class="[_index===0 ? 'border-t' : '']" @click="markItemAsDone(element)">
           <input type="checkbox" :checked="element.bought" class="checkbox checkbox-xl checkbox-primary mr-4" />
           {{ element.text }} [{{ element.unit }} {{ element.quantity }}]
         </div>
@@ -46,6 +46,8 @@ import { toast } from 'vue-sonner';
   const userId : string | null = useUserStore().getLoggedInUser.userId;
   const listaUuid = route.params.id.toString();
   const lista = ref<ShoppingList>();
+  const items = ref<ShoppingItem[]>();
+
   const newElementModel = reactive<{item : ShoppingItem}>({ item : shoppingListItemNew() })
 
   useHead({
@@ -59,12 +61,10 @@ import { toast } from 'vue-sonner';
   function shoppingListItemNew() : ShoppingItem
   {
     return {
-      id:0,
-      uuid: uuidv4(),
+      id: uuidv4(),
       text: '',
       createdAt: 0,
       bought: false,
-      synced: false,
       quantity:1,
       unit: EShoppingItemUnit.PIECE
     }
@@ -72,61 +72,32 @@ import { toast } from 'vue-sonner';
 
   async function deleteList()
   {
-      if (!userId) 
-        toast.error('Nie jesteś zalogowany.');
-      
-      try 
-      {
-        if( lista.value?.id && lista.value.id !== 0 )
-          await useUseShoppingListSupabase().deleteShoppingListPositions(lista.value.id);
-
-        await useUseShoppingListSupabase().deleteShoppingListFromSupabase(listaUuid);
-        await useShoppingListRepo().deleteShoppingList(listaUuid);
-        await navigateTo('/');
-      } 
-      catch (error) 
-      {
-        toast.error('Błąd podczas usuwania listy zakupów.');
-        throw error;
-      }
+      useSupabaseRepo().deleteShoppingList(listaUuid);
   }
 
   async function loadList()
   {
-    lista.value = await useShoppingListRepo().fetchShoppingListById(listaUuid);
+    const tmpLista = await useSupabaseRepo().getShoppingListByUuid(listaUuid);
+
+    if( tmpLista )
+    {
+      lista.value = tmpLista;
+      items.value = await useSupabaseRepo().getShoppingListItems(listaUuid);
+    }
+      
   }
 
   async function addItemsToShoppingList()
   {
-    if (!userId) 
-      toast.error('Nie jesteś zalogowany.');
-
-    try
-    {
-      await useShoppingListRepo().addShoppingItem(listaUuid, newElementModel.item);
-      const addedItem = await useShoppingListRepo().getShoppingListItem(listaUuid, newElementModel.item.uuid);
-      if( lista.value?.id && lista.value.id !== 0 )
-        await useUseShoppingListSupabase().addShoppingListPositionToSupabase(lista.value.id, addedItem);
-      
-      await loadList();
-      newElementModel.item = shoppingListItemNew();
-    }
-    catch (error) 
-    {
-      toast.error('Błąd podczas dodawania pozycji do listy zakupów.');
-      throw error;
-    }
+    const tmpItem = await useSupabaseRepo().addShoppingListItem( listaUuid, newElementModel.item );
+    items.value?.push(tmpItem);
   }
 
   async function markItemAsDone( item : ShoppingItem )
   {
     item.bought = !item.bought;
-    await useShoppingListRepo().updateShoppingItem(listaUuid, item.uuid, item);
-    const updatedItem = await useShoppingListRepo().getShoppingListItem(listaUuid, item.uuid);
 
-    if( lista.value?.id && lista.value.id !== 0 )
-    await useUseShoppingListSupabase().markItemAsDone(updatedItem);
-    
+    await useSupabaseRepo().updateShoppingListItem( listaUuid, item.id, item );
   }
 </script>
 

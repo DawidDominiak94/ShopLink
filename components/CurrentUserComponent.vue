@@ -16,7 +16,7 @@
     </div>
 
   </div>
-  <div class="rounded-3xl bg-primary/40 w-full flex flex-col mt-2 mb-2 p-4 text-center cursor-pointer" @click="logoutAction()">
+  <div class="rounded-3xl bg-red-500/40 w-full flex flex-col mt-4 p-4 text-center cursor-pointer" @click="logoutAction()">
       Wyloguj
   </div>
 </template>
