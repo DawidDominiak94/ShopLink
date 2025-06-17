@@ -1,6 +1,8 @@
 <template>
   <div class="flex flex-col gap-4 text-center">
+    <div>
     TEST:{{ test }}
+    </div>
     <qrcode-stream @detect="onDetect"></qrcode-stream>
   </div>
 </template>
