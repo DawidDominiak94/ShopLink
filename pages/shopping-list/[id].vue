@@ -40,6 +40,8 @@
 
 <script lang="ts" setup>
   import { v4 as uuidv4 } from 'uuid';
+  const supabase = useNuxtApp().$supabase;
+
 
   const route = useRoute();
   const userId : string | null = useUserStore().getLoggedInUser.userId;
@@ -49,12 +51,27 @@
 
   const newElementModel = reactive<{item : ShoppingItem}>({ item : shoppingListItemNew() })
 
+  const channels = supabase.channel(`shopping_list:${listaUuid}`)
+  .on(
+    'postgres_changes',
+    { event: '*', schema: 'public', table: 'shopping_list_items', filter:`shopping_list_id_fk=eq.${listaUuid}` },
+    (payload) => {
+      loadList();
+    }
+  )
+  .subscribe()
+
   useHead({
     title: `Szczegóły - ${route.params.id}`
   })
 
   onMounted(() => {
     loadList();
+  })
+
+  onUnmounted( async () => {
+    channels.unsubscribe();
+    await supabase.removeChannel(channels);
   })
 
   function shoppingListItemNew() : ShoppingItem
