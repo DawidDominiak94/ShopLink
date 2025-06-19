@@ -5,6 +5,7 @@ export interface ShoppingList
     createdAt: number   // timestamp
     updatedAt: number   // timestamp
     status: EShoppingListStatus
+    owner_id_fk: string
 }
 // Typ pojedynczego wpisu
 export interface ShoppingItem 

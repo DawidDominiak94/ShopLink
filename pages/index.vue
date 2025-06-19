@@ -32,7 +32,8 @@
 <script setup lang="ts">
   const nuxtApp = useNuxtApp();
   const userStore = useUserStore();
-
+  const userData = storeToRefs(userStore);
+  
   const items = reactive<{lists : ShoppingList[]}>({ lists: [] });
 
   const shouldShowHint = ref(false);
@@ -58,6 +59,7 @@
 
   onMounted(async () => {
     await userStore.refreshUser();
+
     name.value = window.navigator.userAgent.toLowerCase();
     const isIos = /iphone|ipad|ipod|mac os x/.test(window.navigator.userAgent.toLowerCase());
     const isInStandaloneMode = 'standalone' in window.navigator && window.navigator.standalone;
@@ -70,6 +72,8 @@
 
   function getListBorderByStatus( list : ShoppingList ) : string
   {
+    if( list.owner_id_fk !== userData.userId.value)
+      return 'border-yellow-600';
 
     switch( list.status )
     {

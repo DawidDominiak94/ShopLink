@@ -269,8 +269,8 @@ export const useSupabaseRepo = () => {
     if( connection?.guest_id )
     {
       logger.error("Error linking connection in Supabase:");
-      toast.error('Błąd podczas łączenia z użytkownikiem. Połączenie zostało już wykorzystane.');
-      throw new Error('Błąd podczas łączenia z użytkownikiem. Połączenie zostało już wykorzystane.');
+      toast.error('Błąd podczas łączenia z użytkownikiem. Powiązanie zostało już wykorzystane.');
+      throw new Error('Błąd podczas łączenia z użytkownikiem. Powiązanie zostało już wykorzystane.');
     }
 
     const { data, error } = await supabase
@@ -290,6 +290,28 @@ export const useSupabaseRepo = () => {
     return data;
   }
 
+  async function deleteConnection( connectionId: string ): Promise<boolean>
+  {
+    checkIfUserIsLoggedIn();
+
+    const { error } = await supabase
+      .from('synced_users')
+      .delete()
+      .eq('id', connectionId)
+      .eq('owner_id', userId);
+
+    if (error)
+    {
+      logger.error("Error deleting connection from Supabase:", error);
+      toast.error('Błąd podczas usuwania połączenia z użytkownikiem. Spróbuj ponownie później.');
+      throw new Error('Błąd podczas usuwania połączenia z użytkownikiem.');
+    }
+
+    logger.info(`Powiązanie o ID ${connectionId} zostało usunięte.`);
+
+    return true;
+  }
+
   return {
     getShoppingLists,
     addShoppingList,
@@ -301,6 +323,7 @@ export const useSupabaseRepo = () => {
     updateShoppingListItem,
     getSyncedUsers,
     createConnection,
-    linkConnection
+    linkConnection,
+    deleteConnection
   }
 }

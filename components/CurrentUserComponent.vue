@@ -2,7 +2,7 @@
   <div class="rounded-3xl bg-primary/40 w-full flex flex-col pt-2 pb-2">
     <div v-if="activeUser" class="self-center p-4">
       
-      <div class="flex">
+      <div class="flex sm:flex-col">
           <div>
             <img class="rounded w-25 h-25" :src=" data.image ?? '/dummy.jpg' " alt="Avatar profilowy użytkownika" />
           </div>
