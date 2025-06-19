@@ -130,7 +130,8 @@ export const useSupabaseRepo = () => {
     const { data, error } = await supabase
       .from('shopping_list_items')
       .select()
-      .eq('shopping_list_id_fk', uuid);
+      .eq('shopping_list_id_fk', uuid)
+      .order('created_at', { ascending: true });
 
     if (error)
     {
@@ -189,6 +190,28 @@ export const useSupabaseRepo = () => {
     }
 
     return data;
+  }
+
+  async function deleteShoppingListItem(uuid: string, itemId: string): Promise<boolean>
+  {
+    checkIfUserIsLoggedIn();
+
+    const { error } = await supabase
+      .from('shopping_list_items')
+      .delete()
+      .eq('id', itemId)
+      .eq('shopping_list_id_fk', uuid);
+
+    if (error)
+    {
+      logger.error("Error deleting shopping list item from Supabase:", error);
+      toast.error('Błąd podczas usuwania elementu listy zakupów z Supabase. Spróbuj ponownie później.');
+      throw new Error('Błąd podczas usuwania elementu listy zakupów z Supabase.');
+    }
+
+    logger.info(`Element listy zakupów o ID ${itemId} został usunięty.`);
+
+    return true;
   }
 
   async function getSyncedUsers()
@@ -321,6 +344,7 @@ export const useSupabaseRepo = () => {
     getShoppingListItems,
     addShoppingListItem,
     updateShoppingListItem,
+    deleteShoppingListItem,
     getSyncedUsers,
     createConnection,
     linkConnection,
