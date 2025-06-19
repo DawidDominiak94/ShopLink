@@ -138,7 +138,7 @@
 
   async function onDeleteItem( itemId: string )
   {
-    const result = await useSupabaseRepo().deleteShoppingListItem( itemId, listaUuid );
+    const result = await useSupabaseRepo().deleteShoppingListItem( listaUuid, itemId  );
     if( result )
     {
       toast.success("Pomyślnie usunięto element z listy.");
