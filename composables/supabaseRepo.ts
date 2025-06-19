@@ -23,8 +23,7 @@ export const useSupabaseRepo = () => {
 
     const { data, error } = await supabase
       .from('shopping_list')
-      .select()
-      .eq('owner_id_fk', userId);
+      .select();
 
     if (error) 
     {
@@ -112,7 +111,6 @@ export const useSupabaseRepo = () => {
       .from('shopping_list')
       .select()
       .eq('id', uuid)
-      .eq('owner_id_fk', userId)
       .single();
 
     if (error)
@@ -211,7 +209,8 @@ export const useSupabaseRepo = () => {
 
     const syncedUsers : SyncedUsers[] = data.map(user => ({
       id: user.id,
-      description: user.description ?? 'Brak opisu'
+      description: user.description ?? 'Brak opisu',
+      guest_id: user.guest_id ?? null
     }));
 
     logger.info(`Pobrano ${syncedUsers.length} zsynchronizowanych użytkowników.`);
