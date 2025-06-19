@@ -126,6 +126,7 @@
   {
     const tmpItem = await useSupabaseRepo().addShoppingListItem( listaUuid, newElementModel.item );
     items.value?.push(tmpItem);
+    addNewItemModal.close();
   }
 
   async function markItemAsDone( item : ShoppingItem )
@@ -139,7 +140,11 @@
   {
     const result = await useSupabaseRepo().deleteShoppingListItem( itemId, listaUuid );
     if( result )
+    {
       toast.success("Pomyślnie usunięto element z listy.");
+      loadList();
+    }
+      
   }
 
   async function addToList()
