@@ -43,6 +43,7 @@ export interface SyncedUsers
 {
   id: string;
   description: string; // np. "Jan Kowalski"
+  guest_id: string; // UUID gościa, np. "123e4567-e89b-12d3-a456-426614174000"
 }
 
 export interface QrCodeData

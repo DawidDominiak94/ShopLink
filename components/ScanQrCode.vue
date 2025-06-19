@@ -14,9 +14,14 @@
   import { QrcodeStream } from 'vue-qrcode-reader'
   const test = ref<QrCodeData[]>();
 
-  function onDetect (detectedCodes : any) 
+  async function onDetect (detectedCodes : any) 
   {
     test.value = detectedCodes;
+    if( test.value )
+      if( test.value[0].rawValue )
+      {
+        useSupabaseRepo().linkConnection( test.value[0].rawValue )
+      }
   }
 </script>
 

@@ -242,6 +242,55 @@ export const useSupabaseRepo = () => {
     return data;
   }
 
+  async function getConnectionById( connectionId: string ): Promise<SyncedUsers | null>
+  {
+    checkIfUserIsLoggedIn();
+
+    const { data, error } = await supabase
+      .from('synced_users')
+      .select()
+      .eq('id', connectionId)
+      .single();
+
+    if (error)
+    {
+      logger.error("Error fetching connection by ID from Supabase:", error);
+      toast.error('Błąd podczas pobierania połączenia z użytkownikiem. Spróbuj ponownie później.');
+      throw new Error('Błąd podczas pobierania połączenia z użytkownikiem.');
+    }
+
+    return data;
+  }
+
+  async function linkConnection( connectionId: string ): Promise<SyncedUsers>
+  {
+    checkIfUserIsLoggedIn();
+    
+    const connection = await getConnectionById(connectionId);
+    if( connection?.guest_id )
+    {
+      logger.error("Error linking connection in Supabase:");
+      toast.error('Błąd podczas łączenia z użytkownikiem. Połączenie zostało już wykorzystane.');
+      throw new Error('Błąd podczas łączenia z użytkownikiem. Połączenie zostało już wykorzystane.');
+    }
+
+    const { data, error } = await supabase
+      .from('synced_users')
+      .update({ guest_id: userId })
+      .eq('id', connectionId)
+      .select()
+      .single();
+
+    if (error)
+    {
+      logger.error("Error linking connection in Supabase:", error);
+      toast.error('Błąd podczas łączenia z użytkownikiem. Spróbuj ponownie później.');
+      throw new Error('Błąd podczas łączenia z użytkownikiem.');
+    }
+
+    return data;
+  }
+
   return {
     getShoppingLists,
     addShoppingList,
@@ -252,6 +301,7 @@ export const useSupabaseRepo = () => {
     addShoppingListItem,
     updateShoppingListItem,
     getSyncedUsers,
-    createConnection
+    createConnection,
+    linkConnection
   }
 }
