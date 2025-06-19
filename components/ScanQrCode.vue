@@ -8,8 +8,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { QrcodeStream, QrcodeDropZone, QrcodeCapture } from 'vue-qrcode-reader'
-  const test = ref();
+  import { QrcodeStream } from 'vue-qrcode-reader'
+  const test = ref<QrCodeData[]>();
 
   function onDetect (detectedCodes : any) 
   {

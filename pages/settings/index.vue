@@ -21,10 +21,6 @@
           <CurrentConnections />
         </div>
 
-        <div class="p-2">
-          <ScanQrCode />
-        </div>
-
       </template>
       <template v-else>
         <div class="p-2">

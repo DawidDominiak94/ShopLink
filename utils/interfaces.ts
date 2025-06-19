@@ -44,3 +44,8 @@ export interface SyncedUsers
   id: string;
   description: string; // np. "Jan Kowalski"
 }
+
+export interface QrCodeData
+{
+  rawValue: string; // surowa wartość QR kodu
+}
