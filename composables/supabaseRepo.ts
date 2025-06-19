@@ -262,7 +262,7 @@ export const useSupabaseRepo = () => {
     return data;
   }
 
-  async function linkConnection( connectionId: string ): Promise<SyncedUsers>
+  async function linkConnection( connectionId: string, guestUserId: string ): Promise<SyncedUsers>
   {
     checkIfUserIsLoggedIn();
     
@@ -276,7 +276,7 @@ export const useSupabaseRepo = () => {
 
     const { data, error } = await supabase
       .from('synced_users')
-      .update({ guest_id: userId })
+      .update({ guest_id: guestUserId })
       .eq('id', connectionId)
       .select()
       .single();

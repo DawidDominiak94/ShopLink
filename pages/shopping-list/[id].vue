@@ -40,7 +40,6 @@
 
 <script lang="ts" setup>
   import { v4 as uuidv4 } from 'uuid';
-import { toast } from 'vue-sonner';
 
   const route = useRoute();
   const userId : string | null = useUserStore().getLoggedInUser.userId;

@@ -46,7 +46,7 @@ export const useUserStore = defineStore('UserStore',{
         this.createdAt = data.user.created_at !== undefined ? new Date(data.user.created_at) : null;
 
         toast.success('Zalogowano pomyślnie.');
-        setTimeout(() => { navigateTo({ name:'index' }) },2000);
+        navigateTo({ name:'index' });
       }
     },
     async logOut()

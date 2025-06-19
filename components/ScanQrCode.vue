@@ -12,7 +12,7 @@
 
 <script lang="ts" setup>
   import { QrcodeStream } from 'vue-qrcode-reader';
-  import { toast } from "vue-sonner";
+  const output = defineEmits<{ scannedText: [string] }>();
   
   const test = ref<QrCodeData[]>();
 
@@ -22,9 +22,7 @@
     if( test.value )
       if( test.value[0].rawValue )
       {
-          const data = await useSupabaseRepo().linkConnection( test.value[0].rawValue )
-          if( data.guest_id )
-            toast.success('Połączono użytkowników');
+         output('scannedText', test.value[0].rawValue);
       }
   }
 </script>

@@ -32,30 +32,11 @@
       </ul>
     </div>
   </div>
-  <dialog id="my_modal_1" class="modal">
-    <div class="modal-box">
-      <h3 class="text-lg font-bold text-center">Kod QR do sparowania kont</h3>
-      <p class="py-4 justify-items-center">
-        <img class="mt-6 mb-2 rounded border" :src="qrcode" alt="QR Code">
-      </p>
-      <div class="modal-action">
-        <form method="dialog">
-          <button class="btn">Zamknij</button>
-        </form>
-      </div>
-    </div>
-  </dialog>
 </template>
 
 <script lang="ts" setup>
-  import { useQRCode } from '@vueuse/integrations/useQRCode';
 
   const syncedUsersData = ref<SyncedUsers[]>([]);
-  const text = shallowRef('https://vueuse.org')
-  const qrcode = useQRCode(text, {
-    errorCorrectionLevel: 'H',
-    margin: 3,
-  });
 
   const id = ref<string>();
 
@@ -78,8 +59,7 @@
 
   function showQrCode(element: SyncedUsers)
   {
-    my_modal_1.showModal();
-    text.value = element.id;
+    navigateTo({ name:'scan-qr-code-connectionId', params: { connectionId: element.id } })
   }
 
 </script>
