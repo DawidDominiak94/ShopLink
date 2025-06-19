@@ -1,7 +1,10 @@
 <template>
   <div class="flex flex-col gap-4 text-center">
     <div>
-    TEST:{{ test }}
+    TEST:
+      <template v-if="test">
+        {{ test[0].rawValue }}
+      </template>
     </div>
     <qrcode-stream @detect="onDetect"></qrcode-stream>
   </div>
