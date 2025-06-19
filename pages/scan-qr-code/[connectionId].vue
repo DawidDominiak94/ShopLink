@@ -11,16 +11,13 @@
 
   async function linkUsers( userId: string )
   {
-    if( typeof route.params == 'string' )
-    {
-      const data = await useSupabaseRepo().linkConnection( route.params.connectionId!, userId )
+      const connectionId = Array.isArray(route.params.connectionId) ? route.params.connectionId[0] : route.params.connectionId!;
+      const data = await useSupabaseRepo().linkConnection( connectionId, userId )
       if( data.guest_id )
       {
         toast.success('Połączono użytkowników');
         navigateTo('/');
       }
-    }
-
   }
 </script>
 
